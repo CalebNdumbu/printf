@@ -16,10 +16,10 @@ int _printf(const char *format, ...)
             switch (*format)
             {
             case 'c':
-                count += write_char(args);
+                count += write_char(va_arg(args, int));
                 break;
             case 's':
-                count += write_string(args);
+                count += write_string(va_arg(args, char *));
                 break;
             case '%':
                 count += write_percent();
@@ -37,16 +37,14 @@ int _printf(const char *format, ...)
     return count;
 }
 
-int write_char(va_list args)
+int write_char(int c)
 {
-    /* Implement character printing logic */
-    return write(1, &va_arg(args, int), 1);
+    return write(1, &c, 1);
 }
 
-int write_string(va_list args)
+int write_string(const char *str)
 {
-    /* Implement string printing logic */
-    return write(1, va_arg(args, char *), 1);
+    return write(1, str, strlen(str));
 }
 
 int write_percent(void)
