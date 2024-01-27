@@ -1,6 +1,4 @@
 #include "main.h"
-#include <stdio.h>
-#include <stdarg.h>
 
 /**
  * _printf - Printf function
@@ -28,7 +26,7 @@ int _printf(const char *format, ...)
             }
             else if (*format == 'c')
             {
-                int cha = va_arg(args, int);
+                char cha = va_arg(args, int);
                 putchar(cha);
                 count++;
             }
@@ -37,14 +35,22 @@ int _printf(const char *format, ...)
                 char *str = va_arg(args, char*);
                 while (*str)
                 {
-                    count += putchar(*str);
+                    putchar(*str);
+                    count++;
                     str++;
                 }
+            }
+            else
+            {
+                putchar('%');
+                putchar(*format);
+                count +=2;
             }
         }
         else
         {
-            count += putchar(*format);
+            putchar(*format);
+            count++;
         }
 
         format++;
