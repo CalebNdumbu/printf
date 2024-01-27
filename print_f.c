@@ -2,30 +2,48 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-int _printf(const char *format, ...) {
+/**
+ * _printf - Printf function
+ * @format: Format string
+ *
+ * Return: Number of characters printed (excluding the null byte)
+ */
+int _printf(const char *format, ...)
+{
     int count = 0;
 
     va_list args;
     va_start(args, format);
 
-    while (*format) {
-        if (*format == '%') {
+    while (*format)
+    {
+        if (*format == '%')
+        {
             format++;
-            if (*format == '%') {
+
+            if (*format == '%')
+            {
                 putchar('%');
                 count++;
-            } else if (*format == 'c') {
+            }
+            else if (*format == 'c')
+            {
                 int cha = va_arg(args, int);
                 putchar(cha);
                 count++;
-            } else if (*format == 's') {
+            }
+            else if (*format == 's')
+            {
                 char *str = va_arg(args, char*);
-                while (*str) {
+                while (*str)
+                {
                     count += putchar(*str);
                     str++;
                 }
             }
-        } else {
+        }
+        else
+        {
             count += putchar(*format);
         }
 
