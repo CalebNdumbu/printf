@@ -1,5 +1,4 @@
 #include "main.h"
-#include <stdio.h>
 
 /**
  * _printf - Printf function
@@ -28,7 +27,6 @@ int _printf(const char *format, ...)
 
                 case 's':
                     {
-
                         char *str;
                         str = va_arg(args, char*);
                         while (*str != '\0')
@@ -58,13 +56,4 @@ int _printf(const char *format, ...)
     }
     va_end(args);
     return count;
-}
-
-int main()
-{
-        char mes[] = "secret";
-        int num = 1946;
-
-        _printf(" My %s is that I was born in %d\n", mes,num);
-        return 0;
 }
