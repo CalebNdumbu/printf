@@ -44,7 +44,7 @@ int _printf(const char *format, ...)
             {
                 putchar('%');
                 putchar(*format);
-                count += 2;
+                count +=2;
             }
         }
         else
