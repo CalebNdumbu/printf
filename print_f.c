@@ -51,6 +51,11 @@ int _printf(const char *format, ...)
                 count += print;
 
             }
+            else if (*format == 'b')
+            {
+                unsigned int num = va_arg(args, unsigned int);
+                count += print_bin(num);
+            }
             else
             {
                 putchar('%');
@@ -72,6 +77,13 @@ int _printf(const char *format, ...)
     return count;
 }
 
+/**
+ * print_int - Print an integer
+ * num: Int to be printed
+ *
+ * Return: Num of chars printed
+ */
+
 int print_int(int num)
 {
        int count = 0;
@@ -87,6 +99,28 @@ int print_int(int num)
         count += print_int(num / 10);
 
     putchar(num % 10 + '0');
+    count++;
+
+    return count;
+}
+
+
+/**
+ * print_binary - Print an unsigned int in binary format
+ * @n: Unsigned integer to be print
+ *
+ * Return: Num of chars print
+ */
+int print_bin(unsigned int n)
+{
+    int count = 0;
+
+    if (n / 2 != 0)
+    {
+        count += print_bin(n / 2);
+    }
+
+    putchar(n % 2 + 'O');
     count++;
 
     return count;
