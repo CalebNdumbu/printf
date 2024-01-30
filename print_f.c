@@ -1,5 +1,8 @@
 #include "main.h"
 
+int print_int(int num);
+int print_bin(unsigned int n);
+
 /**
  * _printf - Printf function
  * @format: Format string
@@ -7,7 +10,7 @@
  * Return: Number of characters printed
  */
 
-int print_int(int num);
+
 
 int _printf(const char *format, ...)
 {
@@ -111,6 +114,7 @@ int print_int(int num)
  *
  * Return: Num of chars print
  */
+
 int print_bin(unsigned int n)
 {
     int count = 0;
