@@ -4,11 +4,12 @@
  * _printf - Printf function
  * @format: Format string
  *
- * Return: Number of characters printed (excluding the null byte)
+ * Return: Number of characters printed
  */
 int _printf(const char *format, ...)
 {
     int count = 0;
+    int print = 0;
 
     va_list args;
     va_start(args, format);
@@ -40,12 +41,20 @@ int _printf(const char *format, ...)
                     str++;
                 }
             }
+            else if (*format == 'd' || *format == 'i')
+            {
+                int value = va_arg(args, int);
+                print = print_integer(value);
+                count += print;
+
+            }
             else
             {
                 putchar('%');
                 putchar(*format);
                 count +=2;
             }
+
         }
         else
         {
