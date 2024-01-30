@@ -116,7 +116,7 @@ int print_int(int num)
  */
 
 int print_bin(unsigned int n)
-{
+{ 
     int count = 0;
 
     if (n / 2 != 0)
@@ -124,7 +124,7 @@ int print_bin(unsigned int n)
         count += print_bin(n / 2);
     }
 
-    putchar(n % 2 + 'O');
+    putchar(n % 2 + '0');
     count++;
 
     return count;
