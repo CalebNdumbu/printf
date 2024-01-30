@@ -4,6 +4,9 @@
 
 int print_int(int num);
 int print_bin(unsigned int n);
+int print_unsigned(unsigned int n);
+int print_octal(unsigned int n);
+int print_hex(unsigned int n, int uppercase);
 
 /**
  * _printf - Printf function
