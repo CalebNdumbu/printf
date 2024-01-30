@@ -6,6 +6,9 @@
  *
  * Return: Number of characters printed
  */
+
+int print_int(int num);
+
 int _printf(const char *format, ...)
 {
     int count = 0;
@@ -43,8 +46,8 @@ int _printf(const char *format, ...)
             }
             else if (*format == 'd' || *format == 'i')
             {
-                int value = va_arg(args, int);
-                print = print_integer(value);
+                int num = va_arg(args, int);
+                print = print_int(num);
                 count += print;
 
             }
@@ -66,5 +69,25 @@ int _printf(const char *format, ...)
     }
 
     va_end(args);
+    return count;
+}
+
+int print_int(int num)
+{
+       int count = 0;
+
+    if (num < 0)
+    {
+        putchar('-');
+        count++;
+        num = -num;
+    }
+
+    if (num / 10 != 0)
+        count += print_int(num / 10);
+
+    putchar(num % 10 + '0');
+    count++;
+
     return count;
 }
