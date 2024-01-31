@@ -7,6 +7,9 @@ int print_bin(unsigned int n);
 int print_unsigned(unsigned int n);
 int print_octal(unsigned int n);
 int print_hex(unsigned int n, int uppercase);
+void print_buffer(char buffer[], int *buff_ind);
+
+#define BUFF_SIZE 1024
 
 /**
  * _printf - Printf function
@@ -16,85 +19,104 @@ int print_hex(unsigned int n, int uppercase);
  */
 int _printf(const char *format, ...)
 {
-	int count = 0;
-	int print = 0;
+    int count = 0;
+    int print = 0;
+    int buffer_ind = 0;
+    char buffer[BUFF_SIZE];
 
-	va_list args;
-	va_start(args, format);
+    va_list args;
+    va_start(args, format);
 
-	while (*format)
-	{
-		if (*format == '%')
-		{
-			format++;
+    while (*format)
+    {
+        if (*format == '%')
+        {
+            format++;
 
-			if (*format == '%')
-			{
-				putchar('%');
-				count++;
-			}
-			else if (*format == 'c')
-			{
-				char cha = va_arg(args, int);
-				putchar(cha);
-				count++;
-			}
-			else if (*format == 's')
-			{
-				char *str = va_arg(args, char*);
-				while (*str)
-				{
-					putchar(*str);
-					count++;
-					str++;
-				}
-			}
-			else if (*format == 'd' || *format == 'i')
-			{
-				int num = va_arg(args, int);
-				print = print_int(num);
-				count += print;
-			}
-			else if (*format == 'b')
-			{
-				unsigned int num = va_arg(args, unsigned int);
-				count += print_bin(num);
-			}
-			else if (*format == 'u')
-			{
-				count += print_unsigned(va_arg(args, unsigned int));
-			}
-			else if (*format == 'o')
-			{
-				count += print_octal(va_arg(args, unsigned int));
-			}
-			else if (*format == 'x')
-			{
-				count += print_hex(va_arg(args, unsigned int), 0);
-			}
-			else if (*format == 'X')
-			{
-				count += print_hex(va_arg(args, unsigned int), 1);
-			}
-			else
-			{
-				putchar('%');
-				putchar(*format);
-				count += 2;
-			}
-		}
-		else
-		{
-			putchar(*format);
-			count++;
-		}
+            if (*format == '%')
+            {
+                buffer[buffer_ind++] = '%';
+            }
+            else if (*format == 'c')
+            {
+                char cha = va_arg(args, int);
+                buffer[buffer_ind++] = cha;
+            }
+            else if (*format == 's')
+            {
+                char *str = va_arg(args, char*);
+                while (*str)
+                {
+                    buffer[buffer_ind++] = *str;
+                    if (buffer_ind == BUFF_SIZE)
+                        print_buffer(buffer, &buffer_ind);
+                    str++;
+                }
+            }
+            else if (*format == 'd' || *format == 'i')
+            {
+                int num = va_arg(args, int);
+                print = print_int(num);
+                if (buffer_ind + print >= BUFF_SIZE)
+                    print_buffer(buffer, &buffer_ind);
+                sprintf(buffer + buffer_ind, "%d", num);
+                buffer_ind += print;
+            }
+            else if (*format == 'b')
+            {
+                unsigned int num = va_arg(args, unsigned int);
+                if (buffer_ind + print_bin(num) >= BUFF_SIZE)
+                    print_buffer(buffer, &buffer_ind);
+                buffer_ind += print_bin(num);
+            }
+            else if (*format == 'u')
+            {
+                if (buffer_ind + print_unsigned(va_arg(args, unsigned int)) >= BUFF_SIZE)
+                    print_buffer(buffer, &buffer_ind);
+                count += print_unsigned(va_arg(args, unsigned int));
+            }
+            else if (*format == 'o')
+            {
+                if (buffer_ind + print_octal(va_arg(args, unsigned int)) >= BUFF_SIZE)
+                    print_buffer(buffer, &buffer_ind);
+                count += print_octal(va_arg(args, unsigned int));
+            }
+            else if (*format == 'x')
+            {
+                if (buffer_ind + print_hex(va_arg(args, unsigned int), 0) >= BUFF_SIZE)
+                    print_buffer(buffer, &buffer_ind);
+                count += print_hex(va_arg(args, unsigned int), 0);
+            }
+            else if (*format == 'X')
+            {
+                if (buffer_ind + print_hex(va_arg(args, unsigned int), 1) >= BUFF_SIZE)
+                    print_buffer(buffer, &buffer_ind);
+                count += print_hex(va_arg(args, unsigned int), 1);
+            }
+            else
+            {
+                putchar('%');
+                putchar(*format);
+                count += 2;
+            }
+        }
+        else
+        {
+            buffer[buffer_ind++] = *format;
+            if (buffer_ind == BUFF_SIZE)
+                print_buffer(buffer, &buffer_ind);
+            count++;
+        }
 
-		format++;
-	}
+        format++;
+    }
 
-	va_end(args);
-	return count;
+    print_buffer(buffer, &buffer_ind);
+
+    va_end(args);
+    return count;
 }
+
 
 /**
  * print_int - Print an integer
@@ -201,4 +223,24 @@ int print_hex(unsigned int n, int uppercase)
     count++;
 
     return count;
+}
+
+/**
+ * print_buffer - Prints buffered characters and resets the buffer index.
+ * @buffer: The character buffer to be printed.
+ * @buff_ind: Pointer to the buffer index.
+ *
+ * Prints characters in the buffer up to the current index and resets it to 0.
+ */
+void print_buffer(char buffer[], int *buff_ind)
+{
+    if (*buff_ind > 0)
+    {
+        for (int i = 0; i < *buff_ind; i++)
+        {
+            putchar(buffer[i]);
+        }
+    }
+
+    *buff_ind = 0;
 }
