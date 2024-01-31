@@ -38,16 +38,14 @@ int _printf(const char *format, ...)
                 buffer[buffer_ind++] = '%';
             }
             else if (*format == 'u')
-{
-    unsigned int num = va_arg(args, unsigned int);
-    if (buffer_ind + print_unsigned(num) >= BUFF_SIZE)
-        print_buffer(buffer, &buffer_ind);
-    buffer_ind += print_unsigned(num);
-}
-
+            {
+                if (buffer_ind + print_unsigned(va_arg(args, unsigned int)) >= BUFF_SIZE)
+                    print_buffer(buffer, &buffer_ind);
+                count += print_unsigned(va_arg(args, unsigned int));
+            }
             else if (*format == 's')
             {
-                char *str = va_arg(args, char*);
+                char *str = va_arg(args, char *);
                 while (*str)
                 {
                     buffer[buffer_ind++] = *str;
@@ -62,23 +60,15 @@ int _printf(const char *format, ...)
                 print = print_int(num);
                 if (buffer_ind + print >= BUFF_SIZE)
                     print_buffer(buffer, &buffer_ind);
-                sprintf(buffer + buffer_ind, "%d", num);
-                buffer_ind += print;
+                count += print;
             }
             else if (*format == 'b')
             {
                 unsigned int num = va_arg(args, unsigned int);
                 if (buffer_ind + print_bin(num) >= BUFF_SIZE)
                     print_buffer(buffer, &buffer_ind);
-                buffer_ind += print_bin(num);
+                count += print_bin(num);
             }
-            else if (*format == 'u')
-{
-    if (buffer_ind + print_unsigned(va_arg(args, unsigned int)) >= BUFF_SIZE)
-        print_buffer(buffer, &buffer_ind);
-    count += print_unsigned(va_arg(args, unsigned int));
-}
-
             else if (*format == 'o')
             {
                 if (buffer_ind + print_octal(va_arg(args, unsigned int)) >= BUFF_SIZE)
@@ -120,7 +110,6 @@ int _printf(const char *format, ...)
     va_end(args);
     return count;
 }
-
 
 /**
  * print_int - Print an integer
@@ -240,11 +229,7 @@ void print_buffer(char buffer[], int *buff_ind)
 {
     if (*buff_ind > 0)
     {
-        for (int i = 0; i < *buff_ind; i++)
-        {
-            putchar(buffer[i]);
-        }
+        fwrite(buffer, 1, *buff_ind, stdout);
     }
-
     *buff_ind = 0;
 }
