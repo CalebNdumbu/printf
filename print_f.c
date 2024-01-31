@@ -37,11 +37,14 @@ int _printf(const char *format, ...)
             {
                 buffer[buffer_ind++] = '%';
             }
-            else if (*format == 'c')
-            {
-                char cha = va_arg(args, int);
-                buffer[buffer_ind++] = cha;
-            }
+            else if (*format == 'u')
+{
+    unsigned int num = va_arg(args, unsigned int);
+    if (buffer_ind + print_unsigned(num) >= BUFF_SIZE)
+        print_buffer(buffer, &buffer_ind);
+    buffer_ind += print_unsigned(num);
+}
+
             else if (*format == 's')
             {
                 char *str = va_arg(args, char*);
@@ -70,11 +73,12 @@ int _printf(const char *format, ...)
                 buffer_ind += print_bin(num);
             }
             else if (*format == 'u')
-            {
-                if (buffer_ind + print_unsigned(va_arg(args, unsigned int)) >= BUFF_SIZE)
-                    print_buffer(buffer, &buffer_ind);
-                count += print_unsigned(va_arg(args, unsigned int));
-            }
+{
+    if (buffer_ind + print_unsigned(va_arg(args, unsigned int)) >= BUFF_SIZE)
+        print_buffer(buffer, &buffer_ind);
+    count += print_unsigned(va_arg(args, unsigned int));
+}
+
             else if (*format == 'o')
             {
                 if (buffer_ind + print_octal(va_arg(args, unsigned int)) >= BUFF_SIZE)
